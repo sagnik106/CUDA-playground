@@ -6,7 +6,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-__global__ void reduction_neighbored_pairs(int * arr, int * temp, int l)
+__global__ void reduction_interleaved_pairs(int * arr, int * temp, int l)
 {
     int tid = threadIdx.x;
     int gid = blockDim.x * blockIdx.x + threadIdx.x;
@@ -75,7 +75,7 @@ int main()
     gt1=clock();
     cudaMemcpy(d_arr, arr, size, cudaMemcpyHostToDevice);
 
-    reduction_neighbored_pairs<<<grid, block>>>(d_arr, d_temp, shape);
+    reduction_interleaved_pairs<<<grid, block>>>(d_arr, d_temp, shape);
     cudaDeviceSynchronize();
     
     cudaMemcpy(tarr, d_temp, temp_size, cudaMemcpyDeviceToHost);
